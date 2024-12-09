@@ -1,21 +1,41 @@
 import { useEffect, useState } from "react";
+import {jsPDF} from 'jspdf'
+import "jspdf-autotable"
 
 export default function Home() {
 
-  const [usuarios, setUsuarios] = useState([]);
+  const [users, setusers] = useState([]);
 
   useEffect(() => {
-    const buscarUsuario = async () => {
+    const searchUser = async () => {
       try {
-        const resposta = await fetch("http://localhost:3000/usuarios");
-        const dados = await resposta.json();
-        setUsuarios(dados);
+        const answer = await fetch("http://localhost:3000/users");
+        const dataS = await answer.json();
+        setusers(dataS);
       } catch {
-        alert('Ocorreu um erro no app!');
+        alert('An error ocurred on the app.');
       }
     }
-    buscarUsuario();
+    searchUser();
   }, [])
+
+  const pdfExport = () => {
+    
+    const doc = new jsPDF()
+    const dataTable = users.map((user) => [
+      user.name,
+      user.email,
+    ])
+
+    doc.text("User List", 10, 10)
+    doc.autoTable({
+      head: [["Name", "E-mail"]],
+      body: dataTable,
+    })
+
+    doc.save("studentsIFMS.pdf")
+  }
+
 
   return (
     <table>
@@ -23,10 +43,10 @@ export default function Home() {
         <td>Nome</td>
         <td>E-mail</td>
       </tr>
-      {usuarios.map((usuario) =>
-        <tr key={usuario.id}>
-          <td>{usuario.nome}</td>
-          <td>{usuario.email}</td>
+      {users.map((user) =>
+        <tr key={user.id}>
+          <td>{user.nome}</td>
+          <td>{user.email}</td>
         </tr>
       )}
     </table>
