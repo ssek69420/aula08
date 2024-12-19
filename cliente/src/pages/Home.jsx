@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import {jsPDF} from 'jspdf'
 import "jspdf-autotable"
+import { Link } from "react-router-dom";
+import Alterar from "./Alterar";
 
 export default function Home() {
 
@@ -47,6 +49,8 @@ export default function Home() {
         <tr key={user.id}>
           <td>{user.nome}</td>
           <td>{user.email}</td>
+        <td>Link to={'/alterar/' + user.id}</td>
+        <button>Alterar</button>
         </tr>
       )}
     </table>
